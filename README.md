@@ -36,8 +36,8 @@ install it by using this command.
 npm install -g nodemon
 ```
 
-Setup the environment variables in folder config with filename config.env. This
-is the example.
+Setup the environment variables in folder config with filename **config.env**.
+This is the example.
 
 ```
 NODE_ENV=development
