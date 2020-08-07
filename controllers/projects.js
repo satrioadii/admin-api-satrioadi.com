@@ -13,15 +13,26 @@ exports.getProjects = asyncHandler(async (req, res, next) => {
 // @route	GET /api/v1/project/:id
 // @access	public
 exports.getProject = asyncHandler(async (req, res, next) => {
-	const project = await Project.findById(req.params.id);
+	let project = await Project.findById(req.params.id);
 
 	if (!project) {
 		return next(new ErrorResponse(`Project not found`, 404));
 	}
 
+	// Select fields only
+	const fields =
+		"modalImage category description organizationImage tools links";
+	project = project.select(fields);
+
+	// Populate tools
+	project = project.populate({ path: "tools" });
+
+	// Execture project
+	const results = await project;
+
 	res.status(200).json({
 		success: true,
-		data: project.detail,
+		data: results,
 	});
 });
 
@@ -53,7 +64,7 @@ exports.updateProject = asyncHandler(async (req, res, next) => {
 		runValidators: true,
 	});
 
-	res.status(200).json({ success: true, data: project, hai: "lalal" });
+	res.status(200).json({ success: true, data: project });
 });
 
 // @desc	Delete a project
