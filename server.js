@@ -33,8 +33,9 @@ colors.enable();
 const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 
-// Route file
+// ROUTE FILE
 const projects = require("./routes/projects");
+const tools = require("./routes/tools");
 
 // LOAD ENV
 dotnev.config({ path: "./config/config.env" });
@@ -66,6 +67,7 @@ app.use(cors());
 
 // Mount routers
 app.use("/api/v1/project", projects);
+app.use("/api/v1/tool", tools);
 
 // Error Handler Middleware
 app.use(errorHandler);

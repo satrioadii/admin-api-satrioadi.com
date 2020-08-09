@@ -21,3 +21,5 @@ router
 
 // Get tool detail, update a tool, delete a tool
 router.route("/:id").get(getTool).put(updateTool).delete(deleteTool);
+
+module.exports = router;
