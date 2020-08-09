@@ -34,6 +34,8 @@ const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 
 // ROUTE FILE
+const auth = require("./routes/auth");
+const users = require("./routes/users");
 const projects = require("./routes/projects");
 const tools = require("./routes/tools");
 
@@ -66,6 +68,8 @@ app.use(hpp());
 app.use(cors());
 
 // Mount routers
+app.use("/api/v1/auth", auth);
+app.use("/api/v1/users", users);
 app.use("/api/v1/project", projects);
 app.use("/api/v1/tool", tools);
 
