@@ -48,9 +48,8 @@ exports.updateTool = asyncHandler(async (req, res, next) => {
 	if (!tool) {
 		return next(new ErrorResponse(`Tool not found`, 404));
 	}
-
 	// Update a tool
-	tool = await Tool.findOneAndUpdate(req.params.id, req.body, {
+	tool = await Tool.findByIdAndUpdate(req.params.id, req.body, {
 		new: true,
 		runValidators: true,
 	});

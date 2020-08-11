@@ -16,13 +16,16 @@ const router = express.Router({ mergeParams: true });
 
 // Use this
 router.use(protect);
-router.use(authorize("admin"));
+router.use(authorize("Admin"));
 // Below this will always use protect and authorize admin
 // for example: get(protect, authorize("admin"), getUsers).post(protect, athorize("admin"), createUser)
 // it is exactly same with the routes below
 
 // /api/v1/users/
-router.route("/").get(advancedResults(User), getUsers).post(createUser);
+router
+	.route("/")
+	.get(advancedResults(User, null, { select: "_id name email role" }), getUsers)
+	.post(createUser);
 
 // /api/v1/users/:id
 router.route("/:id").get(getUser).put(updateUser).delete(deleteUser);

@@ -43,6 +43,12 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
 		runValidators: true,
 	});
 
+	if (!user) {
+		return next(
+			new ErrorResponse(`User with ID ${req.params.id} is not exist`, 400)
+		);
+	}
+
 	res.status(200).json({ success: true, data: user });
 });
 
@@ -50,7 +56,13 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
 // @rooute  DELETE /api/v1/users/:id
 // @access  Private/Admin
 exports.deleteUser = asyncHandler(async (req, res, next) => {
-	await User.findByIdAndDelete(req.params.id);
+	const user = await User.findByIdAndDelete(req.params.id);
+
+	if (!user) {
+		return next(
+			new ErrorResponse(`User with ID ${req.params.id} is not exist`, 400)
+		);
+	}
 
 	res.status(200).json({ success: true, data: {} });
 });

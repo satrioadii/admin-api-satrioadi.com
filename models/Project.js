@@ -17,7 +17,7 @@ const ProjectSchema = new mongoose.Schema({
 	},
 	modalImage: { type: String, required: [true, "Please add a detail image"] },
 	category: { type: String, required: [true, "Please add a category"] },
-	description: {
+	descriptionDetail: {
 		type: String,
 		required: [true, "Please add a description"],
 		maxlength: [2200, "Desctiption can not be more than 1000 characters"],
@@ -45,6 +45,10 @@ const ProjectSchema = new mongoose.Schema({
 			variant: { type: String },
 		},
 	],
+	createdAt: {
+		type: Date,
+		default: Date.now,
+	},
 });
 
 module.exports = mongoose.model("Project", ProjectSchema);

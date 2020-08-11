@@ -29,6 +29,6 @@ router.put("/updatepassword/", protect, updatePassword);
 // @rooute  POST /api/v1/auth/forgotpassword
 router.post("/forgotpassword", forgotPassword);
 // @rooute  PUT /api/v1/auth/resetpassword/:resettoken
-router.put("/resetpassword/:resettoken", resetPassword);
+router.put("/resetpassword/:reset", resetPassword);
 
 module.exports = router;

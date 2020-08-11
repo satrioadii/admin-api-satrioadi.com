@@ -8,14 +8,10 @@ const User = require("../models/User");
 // @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
 	const { name, email, password, role } = req.body;
-
 	// Create user
-	const user = await User.create({
-		name,
-		email,
-		password,
-		role,
-	});
+	const user = await User.create({ name, email, password, role });
+
+	sendTokenResponse(user, 200, res);
 });
 
 // @desc    Login user
@@ -101,6 +97,14 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 	if (!(await user.matchPassword(req.body.currentPassword))) {
 		return next(new ErrorResponse("Password is incorrect", 401));
 	}
+
+	// Check if the updated password is exactly same with the current one
+	if (await user.matchPassword(req.body.newPassword)) {
+		return next(
+			new ErrorResponse("The new password can not be the same as the old one")
+		);
+	}
+
 	user.password = req.body.newPassword;
 
 	await user.save();
@@ -174,6 +178,8 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 	if (!user) {
 		return next(new ErrorResponse("Invalid token", 400));
 	}
+
+	console.log("RESPOND HERE");
 
 	// Set new password
 	user.password = req.body.password;

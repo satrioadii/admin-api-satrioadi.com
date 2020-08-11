@@ -45,9 +45,13 @@ dotnev.config({ path: "./config/config.env" });
 // CONNECT DB
 connectDB();
 
+// Use basic routing middleware
+// Express
 const app = express();
 // Body parser
 app.use(express.json());
+// Url encoded
+app.use(express.urlencoded({ extended: true }));
 // Cookie parser
 app.use(cookieParser());
 // Log Middleware in Dev
@@ -56,6 +60,8 @@ if (process.env.NODE_ENV === "development") {
 }
 // File upload
 app.use(fileUpload());
+
+// Use security middleware
 // Sanitiza data
 app.use(mongoSanitize());
 // Set security headers

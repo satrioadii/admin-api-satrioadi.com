@@ -13,26 +13,22 @@ exports.getProjects = asyncHandler(async (req, res, next) => {
 // @route	GET /api/v1/project/:id
 // @access	public
 exports.getProject = asyncHandler(async (req, res, next) => {
-	let project = await Project.findById(req.params.id);
+	// Select these fields only
+	const fields =
+		"modalImage category description organizationImage tools links";
+
+	// Find Project
+	let project = await Project.findOne({ _id: req.params.id })
+		.select(fields)
+		.populate({ path: "tools" });
 
 	if (!project) {
 		return next(new ErrorResponse(`Project not found`, 404));
 	}
 
-	// Select fields only
-	const fields =
-		"modalImage category description organizationImage tools links";
-	project = project.select(fields);
-
-	// Populate tools
-	project = project.populate({ path: "tools" });
-
-	// Execture project
-	const results = await project;
-
 	res.status(200).json({
 		success: true,
-		data: results,
+		data: project,
 	});
 });
 
@@ -59,7 +55,7 @@ exports.updateProject = asyncHandler(async (req, res, next) => {
 		return next(new ErrorResponse(`Project not found`, 404));
 	}
 
-	project = await Project.findOneAndUpdate(req.params.id, req.body, {
+	project = await Project.findByIdAndUpdate(req.params.id, req.body, {
 		new: true,
 		runValidators: true,
 	});
