@@ -14,7 +14,7 @@ project on a live system.
 If you interested to clone this project, you may use this command.
 
 ```
-git clone https://github.com/satrioadii/api-satrioadi.com.git
+git clone https://github.com/satrioadii/admin-api-satrioadi.com.git
 ```
 
 ### Installing
