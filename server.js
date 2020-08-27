@@ -79,6 +79,9 @@ app.use("/api/v1/users", users);
 app.use("/api/v1/project", projects);
 app.use("/api/v1/tool", tools);
 
+// Set static folder
+app.use(express.static(path.join(__dirname, "public")));
+
 // Error Handler Middleware
 app.use(errorHandler);
 
