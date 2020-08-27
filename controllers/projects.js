@@ -4,6 +4,7 @@ const asyncHandler = require("../middleware/async");
 const Project = require("../models/Project");
 const FileUploader = require("../utils/fileUploader");
 const stringToObj = require("../utils/objectHandler/toObject");
+const FileRemover = require("../utils/fileRemover");
 
 // @desc	Get all project
 // @route	GET /api/v1/project
@@ -131,6 +132,12 @@ exports.deleteProject = asyncHandler(async (req, res, next) => {
 		return next(new ErrorResponse(`Project not found`, 404));
 	}
 
+	// Find the Image and Remove
+	const key = ["image", "modalImage", "organizationImage"];
+	FileRemover(key, project);
+
+	// Remove from db
 	project.remove();
-	res.status(200).json({ success: true, data: {} });
+
+	res.status(200).json({ success: true, data: project });
 });
