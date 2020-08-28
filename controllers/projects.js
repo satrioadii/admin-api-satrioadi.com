@@ -5,6 +5,7 @@ const Project = require("../models/Project");
 const FileUploader = require("../utils/fileUploader");
 const stringToObj = require("../utils/objectHandler/toObject");
 const FileRemover = require("../utils/fileRemover");
+const removeThis = require("../utils/objectHandler/removeThis");
 
 // @desc	Get all project
 // @route	GET /api/v1/project
@@ -19,7 +20,7 @@ exports.getProjects = asyncHandler(async (req, res, next) => {
 exports.getProject = asyncHandler(async (req, res, next) => {
 	// Select these fields only
 	const fields =
-		"modalImage category description organizationImage tools links";
+		"modalImage category descriptionDetail organizationImage tools links";
 
 	// Find Project
 	let project = await Project.findOne({ _id: req.params.id })
@@ -89,37 +90,44 @@ exports.updateProject = asyncHandler(async (req, res, next) => {
 		return next(new ErrorResponse(`Project not found`, 404));
 	}
 
-	const keyImage = ["image", "modalImage", "organizationImage"];
-	let imageUrl = [];
-	// imageHandler -> Check for images
-	keyImage.forEach(async (key, index) => {
-		if (
-			typeof req.files[key] === "string" ||
-			typeof req.files[key] === "undefined"
-		) {
-			// SKIP
-			return;
-		} else {
-			// UPLOAD NEW IMAGE
-			const newImage = req.files[key];
-			newImage.name = `project_${key}_${req.body.title}${
-				path.parse(newImage.name).ext
-			}`;
-			FileUploader(req.files[key], "project");
-			imageUrl.push({ [key]: `project/${newImage.name}` });
-		}
-	});
+	// Convert string to object
+	let newData = Object.assign({}, req.body);
+	newData = stringToObj(newData, ["links", "tools"]);
 
-	const toUpdateData = Object.assign({}, req.body, ...imageUrl);
+	// Clean unnecesary data
+	const keyImage = ["image", "modalImage", "organizationImage"];
+	newData = removeThis(newData, keyImage);
+	let imageUrl = [];
+
+	// imageHandler -> Check for images
+	if (req.files) {
+		keyImage.forEach(async (key, index) => {
+			if (
+				typeof req.files[key] === "string" ||
+				typeof req.files[key] === "undefined"
+			) {
+				// SKIP
+				return;
+			} else {
+				// UPLOAD NEW IMAGE
+				const newImage = req.files[key];
+				newImage.name = `project_${key}_${req.body.title}${
+					path.parse(newImage.name).ext
+				}`;
+				FileUploader(req.files[key], "project");
+				imageUrl.push({ [key]: `project/${newImage.name}` });
+			}
+		});
+	}
+
+	const toUpdateData = Object.assign({}, newData, ...imageUrl);
 
 	project = await Project.findByIdAndUpdate(req.params.id, toUpdateData, {
 		new: true,
 		runValidators: true,
 	});
 
-	res
-		.status(200)
-		.json({ success: true, data: req.body, data2: req.files, data3: req });
+	res.status(200).json({ success: true, data: project });
 });
 
 // @desc	Delete a project
