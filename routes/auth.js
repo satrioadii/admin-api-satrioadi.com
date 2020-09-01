@@ -10,16 +10,16 @@ const {
 	logout,
 } = require("../controllers/auth");
 
-const { protect } = require("../middleware/auth");
+const { protect, authorize } = require("../middleware/auth");
 
 const router = express.Router();
 
 // @rooute  POST /api/v1/auth/register
-router.post("/register", register);
+router.post("/register", protect, authorize("Admin"), register);
 // @rooute  POST /api/v1/auth/login
 router.post("/login", login);
 // @rooute  GET /api/v1/auth/logout
-router.get("/logout", logout);
+router.get("/logout", protect, logout);
 // @rooute  GET /api/v1/auth/me
 router.get("/me", protect, getMe);
 // @rooute  PUT /api/v1/auth/updatedetails
@@ -27,8 +27,8 @@ router.put("/updatedetails/", protect, updateDetails);
 // @rooute  PUT /api/v1/auth/updatepassword
 router.put("/updatepassword/", protect, updatePassword);
 // @rooute  POST /api/v1/auth/forgotpassword
-router.post("/forgotpassword", forgotPassword);
+// router.post("/forgotpassword", forgotPassword);
 // @rooute  PUT /api/v1/auth/resetpassword/:resettoken
-router.put("/resetpassword/:reset", resetPassword);
+// router.put("/resetpassword/:reset", resetPassword);
 
 module.exports = router;

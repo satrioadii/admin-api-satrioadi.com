@@ -1,4 +1,4 @@
-const dotnev = require("dotenv");
+const dotenv = require("dotenv");
 
 const path = require("path");
 
@@ -40,7 +40,7 @@ const projects = require("./routes/projects");
 const tools = require("./routes/tools");
 
 // LOAD ENV
-dotnev.config({ path: "./config/config.env" });
+dotenv.config({ path: "./config/config.env" });
 
 // CONNECT DB
 connectDB();
